@@ -2,6 +2,11 @@ class AdminMix {
     constructor(Mix) {
         this.Mix = Mix || require('laravel-mix');
 
+        this.Mix.babelConfig({
+            "presets": [["es2015", {"modules": false}]],
+            "plugins": [["component", {"libraryName": "element-ui", "styleLibraryName": "theme-chalk"}]]
+        });
+
         this.handleAliases();
     }
 
