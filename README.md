@@ -1,17 +1,29 @@
 # Admin Architect mix
 
-A webpack tasks for Admin Architect assets compilation.
+A set of predefined webpack tasks for Admin Architect assets compilation.
 
 ### Installation
 
-`npm i adminarchitect-mix --save`
+`npm i https://github.com/endihunter/mix.git --save-dev`
 or
-`yarn add adminarchitect-mix`
-
+`yarn add https://github.com/endihunter/mix.git -D`
 
 ### Usage
 
-add `(new (require('adminarchitect-mix'))(mix)).handle()` to your main `webpack.mix.js` file.
+add to your main `webpack.mix.js` file.
+
+```
+(new admin)
+// requires corresponding node modules (see mix.js comments)
+//.enableEditors([
+//  'Medium',
+//  'TinyMce',
+//  'Ck',
+//  'Markdown'
+//])
+.handle();
+``` 
+
 
 run `npm run dev` to compile assets to a `public/admin` directory.
 
