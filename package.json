@@ -14,7 +14,7 @@
     },
     "homepage": "http://adminarchitect.com",
     "dependencies": {
-        "bootstrap": "^3.3.7",
+        "@adminarchitect/bootstrap": "^3.3.7",
         "fancybox": "^3.0.0",
         "font-awesome": "^4.7.0",
         "axios": "^0.18",
