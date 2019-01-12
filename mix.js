@@ -1,3 +1,10 @@
+const KNOWN_EDITORS = [
+    'TinyMce',
+    'Medium',
+    'Markdown',
+    'Ck'
+];
+
 class AdminMix {
     constructor(Mix) {
         this.Mix = Mix || require('laravel-mix');
@@ -6,6 +13,11 @@ class AdminMix {
             "presets": [["es2015", {"modules": false}]],
             "plugins": [["component", {"libraryName": "element-ui", "styleLibraryName": "theme-chalk"}]]
         });
+
+        // Default editors list.
+        this.editors = [
+            'Medium'
+        ];
 
         this.handleAliases();
     }
@@ -61,18 +73,56 @@ class AdminMix {
         });
     }
 
-    handleEditors() {
-        //this.handleMarkdownEditor();
-        this.handleMediumEditor();
-        this.handleTinyMce();
-        this.handleCkEditor();
+    /**
+     * Enable editors.
+     *
+     * @param editors
+     * @returns {AdminMix}
+     */
+    enableEditors(editors) {
+        if (!Array.isArray(editors)) {
+            editors = Array.from(arguments);
+        }
+
+        editors.forEach((editor) => {
+            if (KNOWN_EDITORS.indexOf(editor) === -1) {
+                throw new Error(`Unknown editor: ${editor}`);
+            }
+        })
+
+        this.editors = editors;
+
+        return this;
     }
 
-    handleTinyMce() {
+    /**
+     * Assemble required editors.
+     */
+    handleEditors() {
+        this.editors.forEach((editor) => {
+            const method = `handle${editor}Editor`;
+
+            this[method]();
+        });
+    }
+
+    /**
+     * Assembles TinyMCE editor
+     *
+     * @requires `tinymce@^4.6.4` package
+     * @note npm i tinymce@^4.6.4 --save-dev
+     */
+    handleTinyMceEditor() {
         this.Mix.copy('node_modules/tinymce/skins', AdminMix.asset('editors/skins'));
         this.Mix.js(AdminMix.resource('js/editors/tinymce.js'), AdminMix.asset('editors/tinymce.js'));
     }
 
+    /**
+     * Assembles CK editor
+     *
+     * @requires `ckeditor@^4.7.0` package
+     * @note npm i ckeditor@^4.7.0 --save-dev
+     */
     handleCkEditor() {
         this.Mix.copy([
             'node_modules/ckeditor/config.js',
@@ -86,14 +136,22 @@ class AdminMix {
         this.Mix.js(AdminMix.resource('js/editors/ckeditor.js'), AdminMix.asset('editors/ckeditor.js'));
     }
 
+    /**
+     * Assembles Medium editor.
+     *
+     * @requires `medium-editor@^5.23.1` package
+     * @note npm i medium-editor@^5.23.1 --save-dev
+     */
     handleMediumEditor() {
         this.Mix.js(AdminMix.resource('js/editors/medium.js'), AdminMix.asset('editors/medium.js'));
         this.Mix.sass(AdminMix.resource('sass/editors/medium.scss'), AdminMix.asset('editors/medium.css'));
     }
 
     /**
-     * @uses `simplemde` package
-     * @note yarn add simplemde | npm install simplemde --save
+     * Assembles Markdown editor.
+     *
+     * @requires `simplemde` package
+     * @note npm i simplemde --save-dev
      */
     handleMarkdownEditor() {
         this.Mix.js(AdminMix.resource('js/editors/markdown.js'), AdminMix.asset('editors/markdown.js'));
